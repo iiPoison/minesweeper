@@ -1,11 +1,11 @@
 //эта функция генерирует поле для пользователя
 const generatePlayerBoard = (numberOfRows, numberOfColumns) => {
-    const board = [];           
+    const board = [];
     for (let i = 0; i < numberOfRows; i++) {
-        const row = [];        
+        const row = [];
         for (let j = 0; j < numberOfColumns; j++) {
-            row.push(' ');                                 
-        }        
+            row.push(' ');
+        }
         board.push(row);
     }
     return board;
@@ -13,12 +13,12 @@ const generatePlayerBoard = (numberOfRows, numberOfColumns) => {
 
 //эта функция генерирует поле бомб
 const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
-    const board = [];           
+    const board = [];
     for (let i = 0; i < numberOfRows; i++) {
         const row = [];
         for (let j = 0; j < numberOfColumns; j++) {
-            row.push(null);                                 
-        }        
+            row.push(null);
+        }
         board.push(row);
     }
 
@@ -28,8 +28,8 @@ const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
         const randomColumnIndex = Math.floor(Math.random()*numberOfColumns);
         if (board[randomRowIndex][randomColumnIndex] !== 'B') {
             board[randomRowIndex][randomColumnIndex] = 'B';
-            numberOfBombsPlaced++; 
-        }       
+            numberOfBombsPlaced++;
+        }
     }
     return board;
 };
@@ -37,28 +37,30 @@ const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
 //получается количество бомб перевернутой плитки
 const getNumberOfNeighborBombs = (bombBoard, rowIndex, columnIndex) => {
     const neighborOffsets = [
-        [-1, -1], 
+        [-1, -1],
         [-1, 0],
         [-1, 1],
-        [0, -1], 
-        [0, 1], 
-        [1, -1], 
-        [1, 0], 
-        [1, 1], 
+        [0, -1],
+        [0, 1],
+        [1, -1],
+        [1, 0],
+        [1, 1],
     ];
 
     const numberOfRows = bombBoard.length;
+    const numberOfColumns = bombBoard[0].length;
     let numberOfBombs = 0;
 
     neighborOffsets.forEach(offset => {
         const neighborRowIndex = rowIndex + offset[0];
         const neighborColumnIndex = columnIndex + offset[1];
-        if (neighborRowIndex >= 0 && neighborRowIndex < numberOfRows && neighborColumnIndex >= 0 && neighborColumnIndex < bombBoard[0].length()) {
+        if (neighborRowIndex >= 0 && neighborRowIndex < numberOfRows &&
+            neighborColumnIndex >= 0 && neighborColumnIndex < numberOfColumns)) {
             if (bombBoard[neighborRowIndex][neighborColumnIndex] === 'B') {
                 numberOfBombs++;
             };
         };
-        return numberOfBombs;        
+        return numberOfBombs;
     });
 
 };
@@ -68,10 +70,8 @@ const flipTile = (playerBoard, bombBoard, rowIndex, columnIndex) => {
     if (playerBoard[rowIndex][columnIndex] !== ' ') {
         console.log('This tile has already been flipped!');
         return;
-    };
-
-    if (bombBoard[rowIndex][columnIndex] === 'B') {
-        playerBoard[rowIndex][columnIndex] = 'B';       
+    }else if (bombBoard[rowIndex][columnIndex] === 'B') {
+        playerBoard[rowIndex][columnIndex] = 'B';
     } else {
         playerBoard[rowIndex][columnIndex] = getNumberOfNeighborBombs(bombBoard,rowIndex,columnIndex);
     };
@@ -79,7 +79,7 @@ const flipTile = (playerBoard, bombBoard, rowIndex, columnIndex) => {
 
 //эта функция печатает заданное поле
 const printBoard = board => {
-    console.log(board.map(row => row.join(' | ')).join('\n')); 
+    console.log(board.map(row => row.join(' | ')).join('\n'));
 };
 
 //генерация поля игрока и поля бомб
@@ -95,9 +95,3 @@ printBoard(bombBoard);
 flipTile(playerBoard, bombBoard, 0, 0);
 console.log('Updated Player Board:');
 printBoard(playerBoard);
-
-
-
-
-
-
