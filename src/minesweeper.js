@@ -26,11 +26,55 @@ const generateBombBoard = (numberOfRows, numberOfColumns, numberOfBombs) => {
     while (numberOfBombsPlaced < numberOfBombs) {
         const randomRowIndex = Math.floor(Math.random()*numberOfRows);
         const randomColumnIndex = Math.floor(Math.random()*numberOfColumns);
-        //проверка на наличие бомбы в этой клетке
-        board[randomRowIndex][randomColumnIndex] = 'B';
-        numberOfBombsPlaced++;        
+        if (board[randomRowIndex][randomColumnIndex] !== 'B') {
+            board[randomRowIndex][randomColumnIndex] = 'B';
+            numberOfBombsPlaced++; 
+        }       
     }
     return board;
+};
+
+//получается количество бомб перевернутой плитки
+const getNumberOfNeighborBombs = (bombBoard, rowIndex, columnIndex) => {
+    const neighborOffsets = [
+        [-1, -1], 
+        [-1, 0],
+        [-1, 1],
+        [0, -1], 
+        [0, 1], 
+        [1, -1], 
+        [1, 0], 
+        [1, 1], 
+    ];
+
+    const numberOfRows = bombBoard.length;
+    let numberOfBombs = 0;
+
+    neighborOffsets.forEach(offset => {
+        const neighborRowIndex = rowIndex + offset[0];
+        const neighborColumnIndex = columnIndex + offset[1];
+        if (neighborRowIndex >= 0 && neighborRowIndex < numberOfRows && neighborColumnIndex >= 0 && neighborColumnIndex < bombBoard[0].length()) {
+            if (bombBoard[neighborRowIndex][neighborColumnIndex] === 'B') {
+                numberOfBombs++;
+            };
+        };
+        return numberOfBombs;        
+    });
+
+};
+
+//переворачивает плитку
+const flipTile = (playerBoard, bombBoard, rowIndex, columnIndex) => {
+    if (playerBoard[rowIndex][columnIndex] !== ' ') {
+        console.log('This tile has already been flipped!');
+        return;
+    };
+
+    if (bombBoard[rowIndex][columnIndex] === 'B') {
+        playerBoard[rowIndex][columnIndex] = 'B';       
+    } else {
+        playerBoard[rowIndex][columnIndex] = getNumberOfNeighborBombs(bombBoard,rowIndex,columnIndex);
+    };
 };
 
 //эта функция печатает заданное поле
@@ -39,14 +83,18 @@ const printBoard = board => {
 };
 
 //генерация поля игрока и поля бомб
-let playerBoard = generatePlayerBoard(5, 5);
-let bombBoard = generateBombBoard(5, 5, 10);
+let playerBoard = generatePlayerBoard(3, 3);
+let bombBoard = generateBombBoard(3, 3, 3);
 
 //вывод результатов в консоль
 console.log('Player Board:');
 printBoard(playerBoard);
 console.log('Bomb Board:');
 printBoard(bombBoard);
+
+flipTile(playerBoard, bombBoard, 0, 0);
+console.log('Updated Player Board:');
+printBoard(playerBoard);
 
 
 
